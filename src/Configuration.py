@@ -75,6 +75,7 @@ class Configuration:
         gl.glMatrixMode(gl.GL_MODELVIEW)
         gl.glLoadIdentity()
         gl.glTranslatef(0.0,0.0, self.parameters['screenPosition'])       
+        gl.glRotatef(-90,1,0,0)
         
     # Getter
     def getParameter(self, parameterKey):
@@ -142,6 +143,15 @@ class Configuration:
         elif self.event.dict['unicode'] == 'z' or self.event.key == pygame.K_z:
             gl.glRotate(2.5, 0, 0, 1) 
         
+        # Zoom 
+        elif self.event.dict['unicode'] == "l" or (self.event.mod & pygame.KMOD_SHIFT and self.event.key == pygame.K_l): 
+            gl.glScale(1.1,1.1,1.1)
+        elif self.event.dict['unicode'] == "k" or (self.event.mod & pygame.KMOD_SHIFT and self.event.key == pygame.K_k):
+            gl.glScale(0.9,0.9,0.9)
+            
+                    
+                   
+        
         # Draws or suppresses the reference frame
         elif self.event.dict['unicode'] == 'a' or self.event.key == pygame.K_a:
             self.parameters['axes'] = not self.parameters['axes']
@@ -149,11 +159,38 @@ class Configuration:
     
     # Processes the MOUSEBUTTONDOWN event
     def processMouseButtonDownEvent(self):
-        pass
-    
+        if self.event.button==4:
+                gl.glScale(0.9,0.9,0.9)
+        elif self.event.button==5:
+                gl.glScale(1.1,1.1,1.1) 
+                
     # Processes the MOUSEMOTION event
     def processMouseMotionEvent(self):
-        pass
+        if pygame.mouse.get_pressed()[0] == 1 :
+            if self.event.type == pygame.MOUSEMOTION:
+                if self.event.rel[0]<0:
+                    gl.glRotate(-2.5,0,0,1)
+                elif self.event.rel[0]>0:
+                    gl.glRotate(2.5,0,0,1)
+                elif self.event.rel[1]<0:
+                    gl.glRotate(-2.5,1,0,0)
+                elif self.event.rel[1]>0:
+                    gl.glRotate(2.5,1,0,0)
+
+            
+        elif pygame.mouse.get_pressed()[2] == 1:
+            if self.event.type == pygame.MOUSEMOTION:
+                if self.event.rel[0]<0:
+                    gl.glTranslate (0.25,0,0)
+                elif self.event.rel[0]>0:
+                    gl.glTranslate(-0.25,0,0)
+                elif self.event.rel[1]<0:
+                    gl.glTranslate (0,0,0.25)
+                elif self.event.rel[1]>0:
+                    gl.glTranslate (0,0,-0.25)
+                    
+            
+            
          
     # Displays on screen and processes events    
     def display(self): 
