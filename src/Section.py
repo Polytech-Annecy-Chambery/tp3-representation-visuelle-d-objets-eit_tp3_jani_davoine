@@ -52,12 +52,26 @@ class Section:
 
     # Defines the vertices and faces 
     def generate(self):
+        gl.glPushMatrix()
         self.vertices = [ 
-                # Définir ici les sommets
+                [0, 0, 0 ],  #A
+                [0, 0, self.parameters['height']], #B 
+                [self.parameters['width'], 0, self.parameters['height']], #C
+                [self.parameters['width'], 0, 0], #D
+				[0, self.parameters['thickness'], 0 ], #E 
+                [0, self.parameters['thickness'], self.parameters['height']], #F 
+                [self.parameters['width'], self.parameters['thickness'], self.parameters['height']], #G
+                [self.parameters['width'], self.parameters['thickness'], 0], #H
                 ]
         self.faces = [
-                # définir ici les faces
-                ]   
+                [0, 3, 2, 1], #Face ABCD
+                [0, 1, 5, 4], #Face ABFE
+                [4, 5, 6, 7], #Face EFGH
+                [2, 3, 7, 6], #Face CDHG
+                [1, 2, 6, 5], #Face BCGF
+                [0, 4, 7, 3], #Face AEHD
+                ]
+        gl.glPopMatrix()
 
     # Checks if the opening can be created for the object x
     def canCreateOpening(self, x):
@@ -72,10 +86,115 @@ class Section:
     # Draws the edges
     def drawEdges(self):
         # A compléter en remplaçant pass par votre code
-        pass           
+        gl.glPolygonMode(gl.GL_FRONT_AND_BACK,gl.GL_LINE) # on trace les arrêtes de ABCD
+        gl.glBegin(gl.GL_QUADS) # Tracé d’un quadrilatère
+        gl.glColor3fv([0.25, 0.25, 0.25]) # Couleur gris moyen
+        gl.glVertex3fv([0,0,0])
+        gl.glVertex3fv([0, 0, self.parameters['height']])
+        gl.glVertex3fv([self.parameters['width'], 0, self.parameters['height']])
+        gl.glVertex3fv([self.parameters['width'], 0, 0])
+        gl.glEnd()
+            
+        gl.glPolygonMode(gl.GL_FRONT_AND_BACK,gl.GL_LINE) # on trace les arrêtes ABFE
+        gl.glBegin(gl.GL_QUADS) # Tracé d’un quadrilatère
+        gl.glColor3fv([0.25, 0.25, 0.25]) # Couleur gris moyen
+        gl.glVertex3fv([0,0,0])
+        gl.glVertex3fv([0, 0, self.parameters['height']])
+        gl.glVertex3fv([0, self.parameters['thickness'], self.parameters['height']])
+        gl.glVertex3fv([0, self.parameters['thickness'], 0 ])
+        gl.glEnd()
+            
+        gl.glPolygonMode(gl.GL_FRONT_AND_BACK,gl.GL_LINE) # on trace les arrêtes EFGH
+        gl.glBegin(gl.GL_QUADS) # Tracé d’un quadrilatère
+        gl.glColor3fv([0.25, 0.25, 0.25]) # Couleur gris moyen
+        gl.glVertex3fv([0, self.parameters['thickness'], 0 ])
+        gl.glVertex3fv([0, self.parameters['thickness'], self.parameters['height']])
+        gl.glVertex3fv([self.parameters['width'], self.parameters['thickness'], self.parameters['height']])
+        gl.glVertex3fv([self.parameters['width'], 0, 0])
+        gl.glEnd()   
+            
+        gl.glPolygonMode(gl.GL_FRONT_AND_BACK,gl.GL_LINE) # on trace les arrêtes CDHG
+        gl.glBegin(gl.GL_QUADS) # Tracé d’un quadrilatère
+        gl.glColor3fv([0.25, 0.25, 0.25]) # Couleur gris moyen
+        gl.glVertex3fv([self.parameters['width'], 0, self.parameters['height']])
+        gl.glVertex3fv([self.parameters['width'], 0, 0])
+        gl.glVertex3fv([self.parameters['width'], self.parameters['thickness'], 0])
+        gl.glVertex3fv([self.parameters['width'], self.parameters['thickness'], self.parameters['height']])
+        gl.glEnd()   
+            
+        gl.glPolygonMode(gl.GL_FRONT_AND_BACK,gl.GL_LINE) # on trace les arrêtes BCGF
+        gl.glBegin(gl.GL_QUADS) # Tracé d’un quadrilatère
+        gl.glColor3fv([0.25, 0.25, 0.25]) # Couleur gris moyen
+        gl.glVertex3fv([0, 0, self.parameters['height']])
+        gl.glVertex3fv([self.parameters['width'], 0, self.parameters['height']])
+        gl.glVertex3fv([self.parameters['width'], self.parameters['thickness'], self.parameters['height']])
+        gl.glVertex3fv([0, self.parameters['thickness'], self.parameters['height']])
+        gl.glEnd()   
+            
+        gl.glPolygonMode(gl.GL_FRONT_AND_BACK,gl.GL_LINE) # on trace les arrêtes AEHD
+        gl.glBegin(gl.GL_QUADS) # Tracé d’un quadrilatère
+        gl.glColor3fv([0.25, 0.25, 0.25]) # Couleur gris moyen
+        gl.glVertex3fv([0,0,0])
+        gl.glVertex3fv([0, self.parameters['thickness'], 0 ])
+        gl.glVertex3fv([self.parameters['width'], self.parameters['thickness'], 0])
+        gl.glVertex3fv([self.parameters['width'], 0, 0])
+        gl.glEnd()
                     
     # Draws the faces
     def draw(self):
+            if self.parameters['edges'] == True :
+                self.drawEdges()
         # A compléter en remplaçant pass par votre code
-        pass
-  
+            gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_FILL) # on trace la face ABCD
+            gl.glBegin(gl.GL_QUADS) # Tracé d’un quadrilatère
+            gl.glColor3fv([0.5, 0.5, 0.5]) # Couleur gris moyen
+            gl.glVertex3fv([0,0,0])
+            gl.glVertex3fv([0, 0, self.parameters['height']])
+            gl.glVertex3fv([self.parameters['width'], 0, self.parameters['height']])
+            gl.glVertex3fv([self.parameters['width'], 0, 0])
+            gl.glEnd()
+            
+            gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_FILL) # on trace la face ABFE
+            gl.glBegin(gl.GL_QUADS) # Tracé d’un quadrilatère
+            gl.glColor3fv([0.5, 0.5, 0.5]) # Couleur gris moyen
+            gl.glVertex3fv([0,0,0])
+            gl.glVertex3fv([0, 0, self.parameters['height']])
+            gl.glVertex3fv([0, self.parameters['thickness'], self.parameters['height']])
+            gl.glVertex3fv([0, self.parameters['thickness'], 0 ])
+            gl.glEnd()
+            
+            gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_FILL) # on trace la face EFGH
+            gl.glBegin(gl.GL_QUADS) # Tracé d’un quadrilatère
+            gl.glColor3fv([0.5, 0.5, 0.5]) # Couleur gris moyen
+            gl.glVertex3fv([0, self.parameters['thickness'], 0 ])
+            gl.glVertex3fv([0, self.parameters['thickness'], self.parameters['height']])
+            gl.glVertex3fv([self.parameters['width'], self.parameters['thickness'], self.parameters['height']])
+            gl.glVertex3fv([self.parameters['width'], 0, 0])
+            gl.glEnd()   
+            
+            gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_FILL) # on trace la face CDHG
+            gl.glBegin(gl.GL_QUADS) # Tracé d’un quadrilatère
+            gl.glColor3fv([0.5, 0.5, 0.5]) # Couleur gris moyen
+            gl.glVertex3fv([self.parameters['width'], 0, self.parameters['height']])
+            gl.glVertex3fv([self.parameters['width'], 0, 0])
+            gl.glVertex3fv([self.parameters['width'], self.parameters['thickness'], 0])
+            gl.glVertex3fv([self.parameters['width'], self.parameters['thickness'], self.parameters['height']])
+            gl.glEnd()   
+            
+            gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_FILL) # on trace la face BCGF
+            gl.glBegin(gl.GL_QUADS) # Tracé d’un quadrilatère
+            gl.glColor3fv([0.5, 0.5, 0.5]) # Couleur gris moyen
+            gl.glVertex3fv([0, 0, self.parameters['height']])
+            gl.glVertex3fv([self.parameters['width'], 0, self.parameters['height']])
+            gl.glVertex3fv([self.parameters['width'], self.parameters['thickness'], self.parameters['height']])
+            gl.glVertex3fv([0, self.parameters['thickness'], self.parameters['height']])
+            gl.glEnd()   
+            
+            gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_FILL) # on trace la face AEHD
+            gl.glBegin(gl.GL_QUADS) # Tracé d’un quadrilatère
+            gl.glColor3fv([0.5, 0.5, 0.5]) # Couleur gris moyen
+            gl.glVertex3fv([0,0,0])
+            gl.glVertex3fv([0, self.parameters['thickness'], 0 ])
+            gl.glVertex3fv([self.parameters['width'], self.parameters['thickness'], 0])
+            gl.glVertex3fv([self.parameters['width'], 0, 0])
+            gl.glEnd()
