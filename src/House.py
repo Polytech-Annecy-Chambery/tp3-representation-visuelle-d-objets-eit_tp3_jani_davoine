@@ -5,6 +5,9 @@ Created on Thu Nov 16 19:47:50 2017
 @author: lfoul
 """
 import OpenGL.GL as gl
+from Wall import Wall
+
+
 
 class House:
     # Constructor
@@ -38,8 +41,16 @@ class House:
     def add(self, x):
         self.objects.append(x)
         return self
+    
+    
             
     # Draws the house      
-    def draw(self):  
-        # A compléter en remplaçant pass par votre code
-        pass        
+    def draw(self):
+        
+        gl.glPushMatrix()
+  
+        for x in self.objects:
+            x.draw()
+           
+        gl.glPopMatrix()
+         
